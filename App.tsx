@@ -490,18 +490,36 @@ const App: React.FC = () => {
           user={user} 
           progress={progress} 
           isPremium={isPremium}
-          onAction={(action, data) => {
+          expandedQuarterId={expandedQuarterId}
+          onAction={async (action, data) => {
             if (action === 'openMenu') setShowMenu(true);
             if (action === 'changeTab') {
               if (data === 'home') setMode(AppMode.SELECTION);
-              if (data === 'learn') setMode(AppMode.SELECTION); // or a specific learn mode
-              if (data === 'dhikr') setMode(AppMode.ADHKARS);
+              if (data === 'learning') setMode(AppMode.SELECTION); 
+              if (data === 'adhkars') setMode(AppMode.ADHKARS);
               if (data === 'stats') setMode(AppMode.BADGES);
             }
             if (action === 'selectQuarter') {
-              // Handle quarter selection or navigation
-              const qId = parseInt(data.replace('q', ''));
+              if (data === null) {
+                  setExpandedQuarterId(null);
+                  return;
+              }
+              const qId = typeof data === 'string' ? parseInt(data.replace('q', '')) : data;
               setExpandedQuarterId(qId);
+            }
+            if (action === 'selectSurah') {
+                selectSurah(data);
+            }
+            if (action === 'playLumiAudio') {
+                const message = t('lumi_dashboard_welcome', "Tu fais un travail formidable ! Savais-tu que chaque lettre du Coran est une récompense ? ✨");
+                const utterance = new SpeechSynthesisUtterance(message);
+                utterance.lang = i18nInstance.language === 'ar' ? 'ar-SA' : (i18nInstance.language === 'en' ? 'en-US' : 'fr-FR');
+                window.speechSynthesis.speak(utterance);
+            }
+            if (action === 'playAyatAudio') {
+                // Audio for "فَاذْكُرُونِي أَذْكُرْكُمْ" (2:152)
+                const audio = new Audio("https://cdn.islamic.network/quran/audio/128/ar.alafasy/159.mp3");
+                audio.play().catch(e => console.error("Audio play failed", e));
             }
           }}
         />
