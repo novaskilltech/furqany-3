@@ -11,10 +11,10 @@ export const PremiumJourney: React.FC<PremiumJourneyProps> = ({
   onSelectQuarter 
 }) => {
   const journeys = [
-    { id: 'q1', name: 'Al-Fatiha & Début', icon: '🌱', progress: 100, color: 'bg-[#064E3B] text-white' },
-    { id: 'q2', name: 'Vers la Lumière', icon: '✨', progress: 45, color: 'bg-white border border-premium-secondary/20 text-[#064E3B]' },
-    { id: 'q3', name: 'Sagesse Antique', icon: '📜', progress: 0, color: 'bg-white border border-premium-secondary/20 text-[#064E3B]' },
-    { id: 'q4', name: 'Jouz Amma', icon: '🌟', progress: 0, color: 'bg-white border border-premium-secondary/20 text-[#064E3B]' },
+    { id: 'q1', name: '1er Quart', range: 'Fatiha - Al-An\'am', icon: '🌱', progress: 100, color: 'bg-[#064E3B] text-white' },
+    { id: 'q2', name: '2ème Quart', range: 'Al-A\'raf - Al-Isra', icon: '✨', progress: 45, color: 'bg-white border border-premium-secondary/20 text-[#064E3B]' },
+    { id: 'q3', name: '3ème Quart', range: 'Al-Kahf - Fatir', icon: '📜', progress: 0, color: 'bg-white border border-premium-secondary/20 text-[#064E3B]' },
+    { id: 'q4', name: '4ème Quart', range: 'Ya-Sin - An-Nas', icon: '🌟', progress: 5, color: 'bg-white border border-premium-secondary/20 text-[#064E3B]' },
   ];
 
   return (
@@ -30,9 +30,12 @@ export const PremiumJourney: React.FC<PremiumJourneyProps> = ({
               {journey.icon}
             </div>
             <div className="text-left flex-1">
-              <h4 className="font-black text-lg leading-tight mb-1">
+              <h4 className="font-black text-lg leading-tight mb-0.5">
                 {journey.name}
               </h4>
+              <p className="text-[10px] font-bold opacity-70 mb-2 uppercase tracking-wide">
+                {journey.range}
+              </p>
               <div className="flex items-center gap-3">
                 <div className="flex-1 h-2 bg-black/10 rounded-full overflow-hidden">
                   <div 
