@@ -10,22 +10,27 @@ export const PremiumPrayerTimes: React.FC = () => {
   ];
 
   return (
-    <div className="grid grid-cols-5 gap-3">
+    <div className="flex gap-3 overflow-x-auto pb-4 custom-scrollbar snap-x">
       {prayers.map((prayer) => (
         <div 
           key={prayer.name}
-          className={`flex flex-col items-center p-3 py-6 rounded-2xl transition-all duration-300 ${
+          className={`flex-none w-24 snap-start flex flex-col items-center p-4 py-8 rounded-[2rem] transition-all duration-500 border border-white/50 ${
             prayer.active 
-              ? 'bg-gradient-to-br from-premium-secondary to-premium-secondary-700 text-white shadow-lg scale-105' 
-              : 'bg-premium-surface-low border border-premium-surface-high text-premium-on-surface/60'
+              ? 'bg-[#064E3B] text-white shadow-lg scale-105' 
+              : 'bg-white/60 backdrop-blur-sm text-[#064E3B]/60 shadow-sm'
           }`}
         >
-          <span className="text-[10px] font-bold uppercase tracking-wider mb-2 opacity-80">{prayer.name}</span>
-          <span className={`text-sm font-bold ${prayer.active ? 'text-white' : 'text-premium-on-surface'}`}>
+          {prayer.active && (
+            <span className="absolute -top-2 bg-premium-secondary text-white text-[8px] font-black px-2 py-0.5 rounded-full shadow-sm animate-bounce">
+                CURRENT
+            </span>
+          )}
+          <span className="text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">{prayer.name}</span>
+          <span className={`text-lg font-black ${prayer.active ? 'text-white' : 'text-[#064E3B]'}`}>
             {prayer.time}
           </span>
           {prayer.active && (
-            <div className="w-1 h-1 bg-white rounded-full mt-2 animate-pulse" />
+            <div className="w-1.5 h-1.5 bg-[#F59E0B] rounded-full mt-3 shadow-[0_0_10px_#F59E0B]" />
           )}
         </div>
       ))}

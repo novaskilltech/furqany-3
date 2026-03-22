@@ -11,10 +11,10 @@ export const PremiumJourney: React.FC<PremiumJourneyProps> = ({
   onSelectQuarter 
 }) => {
   const journeys = [
-    { id: 'q1', name: 'Al-Fatiha & Début', icon: '🌱', progress: 100 },
-    { id: 'q2', name: 'Vers la Lumière', icon: '✨', progress: 45 },
-    { id: 'q3', name: 'Sagesse Antique', icon: '📜', progress: 0 },
-    { id: 'q4', name: 'Jouz Amma', icon: '🌟', progress: 0 },
+    { id: 'q1', name: 'Al-Fatiha & Début', icon: '🌱', progress: 100, color: 'bg-[#064E3B] text-white' },
+    { id: 'q2', name: 'Vers la Lumière', icon: '✨', progress: 45, color: 'bg-white border border-premium-secondary/20 text-[#064E3B]' },
+    { id: 'q3', name: 'Sagesse Antique', icon: '📜', progress: 0, color: 'bg-white border border-premium-secondary/20 text-[#064E3B]' },
+    { id: 'q4', name: 'Jouz Amma', icon: '🌟', progress: 0, color: 'bg-white border border-premium-secondary/20 text-[#064E3B]' },
   ];
 
   return (
@@ -23,35 +23,32 @@ export const PremiumJourney: React.FC<PremiumJourneyProps> = ({
         <button
           key={journey.id}
           onClick={() => onSelectQuarter(journey.id)}
-          className="premium-journey-card p-4 rounded-3xl bg-premium-surface-high border-2 border-premium-surface-highest/10 hover:border-premium-primary/30 transition-all flex items-center justify-between group overflow-hidden relative"
+          className={`${journey.color} p-5 rounded-[2rem] shadow-sm hover:shadow-premium transition-all flex items-center justify-between group overflow-hidden relative`}
         >
-          <div className="flex items-center gap-4 relative z-10">
-            <div className="w-14 h-14 rounded-2xl bg-premium-surface-highest flex items-center justify-center text-2xl shadow-sm border border-white/5">
+          <div className="flex items-center gap-5 relative z-10 w-full">
+            <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-2xl shadow-inner border border-white/20">
               {journey.icon}
             </div>
-            <div className="text-left">
-              <h4 className="font-bold text-premium-on-surface leading-tight mb-1 group-hover:text-premium-primary transition-colors">
+            <div className="text-left flex-1">
+              <h4 className="font-black text-lg leading-tight mb-1">
                 {journey.name}
               </h4>
-              <div className="flex items-center gap-2">
-                <div className="w-24 h-1.5 bg-premium-surface-highest rounded-full overflow-hidden">
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-2 bg-black/10 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-premium-primary transition-all duration-1000"
+                    className={`h-full ${journey.id === 'q1' ? 'bg-[#F59E0B]' : 'bg-[#064E3B]'} transition-all duration-1000`}
                     style={{ width: `${journey.progress}%` }}
                   ></div>
                 </div>
-                <span className="text-[10px] font-black text-premium-secondary uppercase tracking-tighter">
+                <span className="text-[10px] font-black uppercase tracking-tighter opacity-80">
                   {journey.progress}%
                 </span>
               </div>
             </div>
           </div>
-          <div className="premium-journey-arrow text-premium-secondary group-hover:translate-x-1 transition-transform">
+          <div className="ml-4 opacity-60 group-hover:translate-x-1 transition-transform">
             <span className="text-xl">→</span>
           </div>
-          
-          {/* Subtle background glow on hover */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-premium-primary/5 blur-3xl rounded-full translate-x-16 -translate-y-16 group-hover:bg-premium-primary/10 transition-all"></div>
         </button>
       ))}
     </div>

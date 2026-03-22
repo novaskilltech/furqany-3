@@ -5,18 +5,18 @@
 @tailwind components;
 
 :root {
-  --premium-bg: #e3fffc;
-  --premium-primary: #00302a;
+  --premium-bg: #FDF9E9;
+  --premium-primary: #064E3B;
   --premium-primary-container: #004840;
-  --premium-secondary: #136a60;
+  --premium-secondary: #F59E0B;
   --premium-on-primary: #ffffff;
-  --premium-surface: #e3fffc;
-  --premium-surface-low: #d6fbf8;
+  --premium-surface: #FDF9E9;
+  --premium-surface-low: #FBF7E1;
   --premium-surface-lowest: #ffffff;
-  --premium-surface-high: #cbefec;
-  --premium-on-surface: #00201f;
-  --premium-outline: #707976;
-  --premium-shadow: 0 10px 30px -5px rgba(0, 32, 31, 0.08);
+  --premium-surface-high: #F9F2D8;
+  --premium-on-surface: #064E3B;
+  --premium-outline: #A19F8D;
+  --premium-shadow: 0 10px 40px -10px rgba(6, 78, 59, 0.12);
   --premium-radius: 3rem;
   --premium-radius-sm: 1.5rem;
 
@@ -33,7 +33,7 @@
 }
 
 .premium-title {
-  font-family: 'Noto Serif', serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   letter-spacing: -0.02em;
 }
 

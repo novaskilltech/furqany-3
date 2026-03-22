@@ -7,29 +7,31 @@ interface PremiumHeaderProps {
 
 export const PremiumHeader: React.FC<PremiumHeaderProps> = ({ user, onMenuClick }) => {
   return (
-    <header className="flex items-center justify-between px-6 py-4 sticky top-0 z-50 bg-white/80 backdrop-blur-md">
+    <header className="flex items-center justify-between px-6 py-6 sticky top-0 z-50 bg-white/40 backdrop-blur-xl border-b border-white/20">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-premium-secondary/10 flex items-center justify-center text-premium-secondary font-bold border border-premium-secondary/20">
-          {user?.photoURL ? (
-            <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
-          ) : (
-            <span>{user?.displayName?.[0] || 'A'}</span>
-          )}
+        <div className="w-12 h-12 rounded-full p-1 bg-gradient-to-tr from-[#F59E0B] to-[#FDE68A] shadow-md flex items-center justify-center transform hover:rotate-6 transition-transform">
+          <div className="w-full h-full rounded-full bg-white overflow-hidden flex items-center justify-center text-premium-primary font-black border border-white/50">
+            {user?.photoURL ? (
+              <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-xl">{user?.displayName?.[0] || 'A'}</span>
+            )}
+          </div>
         </div>
         <div className="flex flex-col">
-          <span className="text-[10px] font-bold text-premium-secondary uppercase tracking-widest leading-none mb-1">
-            Mode Premium
-          </span>
-          <span className="text-sm font-bold text-premium-on-surface leading-none">
-            Furqany Explorer
+          <h2 className="text-xl font-black text-[#064E3B] tracking-tight leading-none mb-1">
+            FURQANY
+          </h2>
+          <span className="text-[10px] font-black text-premium-secondary uppercase tracking-[0.2em] leading-none opacity-80">
+            Digital Sanctuary
           </span>
         </div>
       </div>
       <button 
         onClick={onMenuClick}
-        className="w-10 h-10 rounded-full bg-premium-surface-high flex items-center justify-center text-premium-on-surface shadow-sm hover:bg-premium-surface-medium transition-colors"
+        className="w-12 h-12 rounded-2xl bg-white/60 backdrop-blur-md flex items-center justify-center text-premium-primary shadow-sm border border-white/80 hover:bg-white hover:scale-105 transition-all duration-300 active:scale-95"
       >
-        <span className="text-xl">☰</span>
+        <span className="text-2xl">☰</span>
       </button>
     </header>
   );

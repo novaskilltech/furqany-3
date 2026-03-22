@@ -3,10 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { UserProgress, Surah } from '../../types';
 import { PremiumHeader } from './PremiumHeader';
 import { PremiumGreeting } from './PremiumGreeting';
-import { PremiumPrayerTimes } from './PremiumPrayerTimes';
-import { PremiumLearningCalendar } from './PremiumLearningCalendar';
+import { PremiumMascot } from './PremiumMascot';
+import { DailyGlow } from './DailyGlow';
 import { PremiumJourney } from './PremiumJourney';
-import { PremiumStories } from './PremiumStories';
+import { PremiumPrayerTimes } from './PremiumPrayerTimes';
+import { AyatOfTheDay } from './AyatOfTheDay';
 import { PremiumNav } from './PremiumNav';
 
 interface PremiumDashboardProps {
@@ -25,58 +26,49 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div className="premium-mode min-h-screen pb-32 animate-in fade-in duration-700">
+    <div className="premium-mode min-h-screen pb-40 animate-in fade-in duration-700">
       <PremiumHeader user={user} onMenuClick={() => onAction('openMenu')} />
       
-      <main className="px-6 space-y-10">
+      <main className="px-6 space-y-8">
+        {/* 1. Salutation */}
         <PremiumGreeting userName={progress.userName || 'Champion'} />
         
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="premium-title text-xl font-bold text-premium-on-surface">
-              {t('prayer_times_title', 'Temps de prière')}
+        {/* 2. Guidance & Mascotte (Lumi) */}
+        <PremiumMascot 
+          onPlayAudio={() => onAction('playLumiAudio')} 
+          loading={false}
+        />
+
+        {/* 3. Gamification (Daily Glow) */}
+        <DailyGlow streak={progress.streak || 0} />
+
+        {/* 4. Parcours Coranique */}
+        <section className="space-y-4">
+            <h3 className="text-xl font-black text-premium-on-surface tracking-tight">
+                {t('your_quranic_journey', 'Your Quranic Journey')}
             </h3>
-            <span className="text-xs font-bold text-premium-secondary uppercase tracking-widest bg-premium-surface-high px-2 py-1 rounded-lg">
-              PARIS, FR
+            <PremiumJourney progress={progress} onSelectQuarter={(q) => onAction('selectQuarter', q)} />
+        </section>
+
+        {/* 5. Horaires de Prière */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-black text-premium-on-surface tracking-tight">
+              {t('daily_prayers', 'Daily Prayers')}
+            </h3>
+            <span className="text-[10px] font-black text-premium-secondary uppercase tracking-[0.2em] bg-white/60 px-3 py-1.5 rounded-xl border border-white/80">
+              {t('current_location', 'PARIS, FR')}
             </span>
           </div>
           <PremiumPrayerTimes />
         </section>
 
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="premium-title text-xl font-bold text-premium-on-surface">
-              {t('learning_calendar_title', 'Calendrier d\'apprentissage')}
-            </h3>
-            <button className="text-premium-primary">
-              <span className="text-xl">📅</span>
-            </button>
-          </div>
-          <PremiumLearningCalendar />
-        </section>
+        {/* 6. Verset du Jour */}
+        <AyatOfTheDay onListen={() => onAction('playAyatAudio')} />
 
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="premium-title text-xl font-bold text-premium-on-surface">
-              {t('continue_journey', 'Continuer votre voyage')}
-            </h3>
-          </div>
-          <PremiumJourney progress={progress} onSelectQuarter={(q) => onAction('selectQuarter', q)} />
-        </section>
-
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="premium-title text-xl font-bold text-premium-on-surface">
-              {t('prophetic_stories', 'Histoires Prophétiques')}
-            </h3>
-            <button className="text-premium-secondary text-xs font-bold uppercase flex items-center gap-1">
-              {t('see_all', 'Voir tout')} <span className="text-lg">→</span>
-            </button>
-          </div>
-          <PremiumStories />
-        </section>
       </main>
 
+      {/* 7. Navigation Premium */}
       <PremiumNav activeTab="home" onTabChange={(tab) => onAction('changeTab', tab)} />
     </div>
   );
