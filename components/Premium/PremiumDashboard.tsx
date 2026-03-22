@@ -2,8 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserProgress, Surah } from '../../types';
 import { PremiumHeader } from './PremiumHeader';
-import { PremiumGreeting } from './PremiumGreeting';
-import { PremiumMascot } from './PremiumMascot';
+
 
 import { PremiumJourney } from './PremiumJourney';
 import { PremiumPrayerTimes } from './PremiumPrayerTimes';
@@ -37,7 +36,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
 
   return (
     <div className="premium-mode min-h-screen pb-40 animate-in fade-in duration-700">
-      <PremiumHeader user={user} onMenuClick={() => onAction('openMenu')} />
+      <PremiumHeader user={user} onMenuClick={() => onAction('openMenu')} onAction={onAction} />
       
 
       <main className="px-6 space-y-8">
