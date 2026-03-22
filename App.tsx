@@ -98,6 +98,7 @@ const App: React.FC = () => {
   const [showProfileSetup, setShowProfileSetup] = useState(false);
   const [showUninstallGuide, setShowUninstallGuide] = useState(false);
   const [isAutoPlayingSurah, setIsAutoPlayingSurah] = useState(false);
+  const [showTafsir, setShowTafsir] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showSplash, setShowSplash] = useState(true);
   const [expandedQuarterId, setExpandedQuarterId] = useState<number | null>(4);
@@ -215,6 +216,7 @@ const App: React.FC = () => {
   const selectSurah = (surah: Surah) => {
     setSelectedSurah(surah);
     setCurrentVerseIndex(0);
+    setShowTafsir(false);
     setMode(AppMode.LEARNING);
   };
 
@@ -222,6 +224,7 @@ const App: React.FC = () => {
     if (!selectedSurah) return;
     if (currentVerseIndex < selectedSurah.verses.length - 1) {
       setCurrentVerseIndex(v => v + 1);
+      setShowTafsir(false);
     } else {
       handleParentConfirm();
     }
@@ -240,7 +243,10 @@ const App: React.FC = () => {
 
   const handleAutoNext = () => {
     if (selectedSurah && currentVerseIndex < selectedSurah.verses.length - 1) {
-      setTimeout(() => setCurrentVerseIndex(v => v + 1), 1000);
+      setTimeout(() => {
+          setCurrentVerseIndex(v => v + 1);
+          setShowTafsir(false);
+      }, 1000);
     } else if (selectedSurah) {
       setIsAutoPlayingSurah(false);
       handleParentConfirm();
@@ -403,12 +409,20 @@ const App: React.FC = () => {
               onVerseEnded={handleAutoNext}
             />
             <div className="flex gap-3">
-              <button onClick={() => setCurrentVerseIndex(v => v - 1)} disabled={currentVerseIndex === 0} className="flex-1 py-4 bg-white rounded-2xl font-black disabled:opacity-50">Précédent</button>
+              <button onClick={() => { setCurrentVerseIndex(v => v - 1); setShowTafsir(false); }} disabled={currentVerseIndex === 0} className="flex-1 py-4 bg-white rounded-2xl font-black disabled:opacity-50">Précédent</button>
+              <button 
+                onClick={() => setShowTafsir(!showTafsir)} 
+                className={`px-6 py-4 rounded-2xl font-black shadow-md transition-all ${showTafsir ? 'bg-amber-100 text-amber-700 border-2 border-amber-300' : 'bg-white text-amber-600 border-2 border-white'}`}
+              >
+                {showTafsir ? '📖' : '🌟'} Tafsir
+              </button>
               <button onClick={nextVerse} className={`flex-1 py-4 text-white rounded-2xl font-black ${buttonClasses[progress.theme]}`}>
                 {currentVerseIndex === selectedSurah.verses.length - 1 ? 'Valider ! 🏁' : 'Suivant ➡'}
               </button>
             </div>
-            <Mascot verse={selectedSurah.verses[currentVerseIndex]} surahName={getSurahTitle(selectedSurah, i18nInstance.language)} theme={progress.theme} userName={progress.userName} isPremium={isPremium} />
+            {showTafsir && (
+                <Mascot verse={selectedSurah.verses[currentVerseIndex]} surahName={getSurahTitle(selectedSurah, i18nInstance.language)} theme={progress.theme} userName={progress.userName} isPremium={isPremium} />
+            )}
           </div>
         ) : mode === AppMode.GAMES ? (
           <GamesSection progress={progress} setProgress={setProgress} onClose={() => setMode(AppMode.SELECTION)} theme={progress.theme} />
