@@ -1,0 +1,24 @@
+
+{
+  "name": "Furqany",
+  "short_name": "Furqany",
+  "description": "Apprends les sourates avec Lumi l'étoile et Cheikh Mahmoud Ali Al Banna",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#065f46",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+/* Main Styles */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+
+:root {
+  --premium-bg: #e3fffc;
+  --premium-primary: #00302a;
+  --premium-primary-container: #004840;
+  --premium-secondary: #136a60;
+  --premium-on-primary: #ffffff;
+  --premium-surface: #e3fffc;
+  --premium-surface-low: #d6fbf8;
+  --premium-surface-lowest: #ffffff;
+  --premium-surface-high: #cbefec;
+  --premium-on-surface: #00201f;
+  --premium-outline: #707976;
+  --premium-shadow: 0 10px 30px -5px rgba(0, 32, 31, 0.08);
+  --premium-radius: 3rem;
+  --premium-radius-sm: 1.5rem;
+
+  --sat: env(safe-area-inset-top);
+  --sar: env(safe-area-inset-right);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+}
+
+/* Premium Utilities */
+.premium-mode {
+  background-color: var(--premium-bg);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.premium-title {
+  font-family: 'Noto Serif', serif;
+  letter-spacing: -0.02em;
+}
+
+.bg-premium-bg { background-color: var(--premium-bg); }
+.bg-premium-surface-high { background-color: var(--premium-surface-high); }
+.bg-premium-surface-medium { background-color: var(--premium-surface-low); }
+.bg-premium-surface-highest { background-color: var(--premium-surface-lowest); }
+.bg-premium-primary { background-color: var(--premium-primary); }
+.bg-premium-secondary { background-color: var(--premium-secondary); }
+
+.text-premium-on-surface { color: var(--premium-on-surface); }
+.text-premium-primary { color: var(--premium-primary); }
+.text-premium-secondary { color: var(--premium-secondary); }
+
+.border-premium-primary { border-color: var(--premium-primary); }
+.border-premium-secondary { border-color: var(--premium-secondary); }
+
+.shadow-premium { box-shadow: var(--premium-shadow); }
+
+/* Custom Scrollbar for Premium */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--premium-secondary);
+  border-radius: 10px;
+}

@@ -43,10 +43,6 @@ const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isPremium, setIsPremium] = useState(false);
   const [isAuthReady, setIsAuthReady] = useState(false);
-    useEffect(() => {
-    console.log("Furqany Status:", { isPremium, mode, isWelcomeSeen, userEmail: user?.email });
-  }, [isPremium, mode, isWelcomeSeen, user]);
-
   const [isWelcomeSeen, setIsWelcomeSeen] = useState(() => {
     return localStorage.getItem('furqany_welcome_seen') === 'true';
   });
