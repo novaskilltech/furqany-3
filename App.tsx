@@ -11,14 +11,14 @@ import { ThemePicker } from './components/ThemePicker';
 import { ReciterPicker } from './components/ReciterPicker';
 import { Loader } from './components/Loader';
 import { AdhkarsSection } from './components/AdhkarsSection';
-import PrayerTimes from './components/PrayerTimes';
 import { generateCompliment } from './geminiService';
 import { auth, db, googleProvider } from './firebase';
 import { signInWithPopup, onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { BottomNav } from './components/BottomNav';
 import { PremiumDashboard } from './components/Premium/PremiumDashboard';
+import { PremiumLearning } from './components/Premium/PremiumLearning';
+import { PremiumBadges } from './components/Premium/PremiumBadges';
 
 const PARENTAL_CODE = "70000";
 
@@ -333,28 +333,87 @@ const App: React.FC = () => {
 
 
       {showMenu && (
-        <div className="p-4 space-y-3 animate-in fade-in slide-in-from-top-2">
-          <div className="bg-white/80 backdrop-blur-md p-4 rounded-3xl shadow-sm border border-white/50 space-y-4">
-            <div className="flex flex-col gap-2">
-              <button onClick={() => { setShowThemePicker(true); setShowMenu(false); }} className="w-full p-4 bg-gray-50 rounded-2xl font-bold text-gray-700 flex justify-between items-center">
-                <span>🎨 {t('menu.change_theme')}</span>
-                <span className="text-xs opacity-50">→</span>
+        <div className="fixed inset-0 z-[150] flex items-end justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-in fade-in slide-in-from-bottom-10 duration-500">
+          <div className="bg-surface-container-low w-full max-w-md p-8 rounded-t-[3.5rem] shadow-2xl border-t border-surface-variant/30 relative overflow-hidden">
+            <div className="w-12 h-1.5 bg-surface-variant/30 rounded-full mx-auto mb-8"></div>
+            
+            <div className="text-center space-y-2 mb-10">
+              <h2 className="text-2xl font-black text-on-surface tracking-tight">Paramètres 👋</h2>
+              <p className="text-on-surface-variant text-[10px] font-black uppercase tracking-[0.2em]">Configuration App</p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              <button 
+                onClick={() => { setShowThemePicker(true); setShowMenu(false); }} 
+                className="group w-full p-6 bg-surface-container rounded-[2rem] border border-surface-variant/20 flex items-center justify-between hover:border-primary/40 hover:bg-primary/5 transition-all active:scale-[0.98]"
+              >
+                <div className="flex items-center gap-5">
+                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-2xl">palette</span>
+                  </div>
+                  <div className="text-left">
+                    <p className="font-black text-on-surface">{t('menu.change_theme')}</p>
+                    <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest">Couleurs & Design</p>
+                  </div>
+                </div>
+                <span className="material-symbols-outlined text-on-surface-variant/30">chevron_right</span>
               </button>
-              <button onClick={() => { setShowReciterPicker(true); setShowMenu(false); }} className="w-full p-4 bg-gray-50 rounded-2xl font-bold text-gray-700 flex justify-between items-center">
-                <span>🎙️ {t('menu.change_reciter')}</span>
-                <span className="text-xs opacity-50">→</span>
+
+              <button 
+                onClick={() => { setShowReciterPicker(true); setShowMenu(false); }} 
+                className="group w-full p-6 bg-surface-container rounded-[2rem] border border-surface-variant/20 flex items-center justify-between hover:border-secondary/40 hover:bg-secondary/5 transition-all active:scale-[0.98]"
+              >
+                <div className="flex items-center gap-5">
+                  <div className="w-12 h-12 bg-secondary/10 rounded-2xl flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-2xl">mic</span>
+                  </div>
+                  <div className="text-left">
+                    <p className="font-black text-on-surface">{t('menu.change_reciter')}</p>
+                    <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest">Vois de récitateur</p>
+                  </div>
+                </div>
+                <span className="material-symbols-outlined text-on-surface-variant/30">chevron_right</span>
               </button>
-              <button onClick={() => { setShowManual(true); setShowMenu(false); }} className="w-full p-4 bg-gray-50 rounded-2xl font-bold text-gray-700 flex justify-between items-center">
-                <span>📖 {t('headings.manual_title')}</span>
-                <span className="text-xs opacity-50">→</span>
+
+              <button 
+                onClick={() => { setShowManual(true); setShowMenu(false); }} 
+                className="group w-full p-6 bg-surface-container rounded-[2rem] border border-surface-variant/20 flex items-center justify-between hover:border-primary/40 hover:bg-primary/5 transition-all active:scale-[0.98]"
+              >
+                <div className="flex items-center gap-5">
+                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-2xl">menu_book</span>
+                  </div>
+                  <div className="text-left">
+                    <p className="font-black text-on-surface">{t('headings.manual_title')}</p>
+                    <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest">Guide Utilisateur</p>
+                  </div>
+                </div>
+                <span className="material-symbols-outlined text-on-surface-variant/30">chevron_right</span>
               </button>
             </div>
-            <div className="pt-2 border-t border-gray-100">
+
+            <div className="mt-8 pt-8 border-t border-surface-variant/20 space-y-4">
               {user ? (
-                <button onClick={handleLogout} className="w-full p-4 text-rose-500 font-black text-center">{t('menu.logout')}</button>
+                <button 
+                  onClick={handleLogout} 
+                  className="w-full py-5 rounded-[2rem] bg-surface-variant/10 text-rose-500 font-black text-sm uppercase tracking-widest hover:bg-rose-50 transition-colors"
+                >
+                  {t('menu.logout')}
+                </button>
               ) : (
-                <button onClick={handleLogin} className="w-full p-4 bg-blue-600 text-white rounded-2xl font-black shadow-lg">{t('menu.login_google')}</button>
+                <button 
+                  onClick={handleLogin} 
+                  className="w-full py-5 bg-primary text-on-primary rounded-[2rem] font-black shadow-lg shadow-primary/20 active:scale-95 transition-all text-sm uppercase tracking-widest"
+                >
+                  {t('menu.login_google')}
+                </button>
               )}
+              <button 
+                onClick={() => setShowMenu(false)} 
+                className="w-full py-4 text-on-surface-variant/60 font-black text-xs uppercase tracking-[0.2em] hover:text-on-surface transition-colors"
+              >
+                Fermer
+              </button>
             </div>
           </div>
         </div>
@@ -388,89 +447,114 @@ const App: React.FC = () => {
 
           </div>
         ) : mode === AppMode.LEARNING && selectedSurah ? (
-          <div className="max-w-md mx-auto space-y-5 pb-10">
-            <div className="flex items-center justify-between px-2">
-              <button onClick={() => { setMode(AppMode.SELECTION); setIsAutoPlayingSurah(false); }} className="bg-white/80 px-4 py-1.5 rounded-full font-bold text-rose-700 text-sm">⬅ {t('back')}</button>
-              <div className="flex-1 text-center">
-                <h3 className={`text-xl font-black ${surahNameTextClasses[progress.theme]}`}>{getSurahTitle(selectedSurah, i18nInstance.language)}</h3>
-              </div>
-              <button onClick={() => setIsAutoPlayingSurah(!isAutoPlayingSurah)} className={`px-4 py-1.5 rounded-full font-bold text-xs ${isAutoPlayingSurah ? 'bg-rose-600 text-white' : 'bg-white text-gray-600'}`}>
-                {isAutoPlayingSurah ? '⏹️' : '▶️'}
-              </button>
-            </div>
-            <VerseDisplay 
-              verse={selectedSurah.verses[currentVerseIndex]} 
-              surahIdString={selectedSurah.idString}
-              theme={progress.theme}
-              reciter={progress.reciter}
-              fontSizeScale={progress.fontSize}
-              onValidate={handleVerseValidation}
-              isAutoPlay={isAutoPlayingSurah}
-              onVerseEnded={handleAutoNext}
-            />
-            <div className="flex gap-3">
-              <button onClick={() => { setCurrentVerseIndex(v => v - 1); setShowTafsir(false); }} disabled={currentVerseIndex === 0} className="flex-1 py-4 bg-white rounded-2xl font-black disabled:opacity-50">Précédent</button>
-              <button 
-                onClick={() => setShowTafsir(!showTafsir)} 
-                className={`px-6 py-4 rounded-2xl font-black shadow-md transition-all ${showTafsir ? 'bg-amber-100 text-amber-700 border-2 border-amber-300' : 'bg-white text-amber-600 border-2 border-white'}`}
-              >
-                {showTafsir ? '📖' : '🌟'} Tafsir
-              </button>
-              <button onClick={nextVerse} className={`flex-1 py-4 text-white rounded-2xl font-black ${buttonClasses[progress.theme]}`}>
-                {currentVerseIndex === selectedSurah.verses.length - 1 ? 'Valider ! 🏁' : 'Suivant ➡'}
-              </button>
-            </div>
-            {showTafsir && (
-                <Mascot verse={selectedSurah.verses[currentVerseIndex]} surahName={getSurahTitle(selectedSurah, i18nInstance.language)} theme={progress.theme} userName={progress.userName} isPremium={isPremium} />
-            )}
-          </div>
+          <PremiumLearning
+            surah={selectedSurah}
+            currentVerseIndex={currentVerseIndex}
+            theme={progress.theme}
+            reciter={progress.reciter}
+            fontSize={progress.fontSize}
+            isAutoPlay={isAutoPlayingSurah}
+            showTafsir={showTafsir}
+            userName={progress.userName}
+            isPremium={isPremium}
+            onBack={() => { setMode(AppMode.SELECTION); setIsAutoPlayingSurah(false); }}
+            onToggleAutoPlay={() => setIsAutoPlayingSurah(!isAutoPlayingSurah)}
+            onPrevVerse={() => { setCurrentVerseIndex(v => v - 1); setShowTafsir(false); }}
+            onNextVerse={nextVerse}
+            onToggleTafsir={() => setShowTafsir(!showTafsir)}
+            onValidateVerse={handleVerseValidation}
+            onVerseEnded={handleAutoNext}
+          />
         ) : mode === AppMode.GAMES ? (
           <GamesSection progress={progress} setProgress={setProgress} onClose={() => setMode(AppMode.SELECTION)} theme={progress.theme} />
         ) : mode === AppMode.ADHKARS ? (
           <AdhkarsSection onBack={() => setMode(AppMode.SELECTION)} theme={progress.theme} />
         ) : mode === AppMode.BADGES ? (
-          <div className="max-w-md mx-auto bg-white/60 backdrop-blur-md p-6 rounded-[2.5rem] shadow-xl border-4 border-white">
-            <div className="flex items-center justify-between mb-6">
-               <h3 className={`text-xl font-black ${surahNameTextClasses[progress.theme]}`}>Mon Parcours</h3>
-               <button onClick={() => setMode(AppMode.SELECTION)} className="text-rose-600 font-bold text-sm bg-white px-4 py-1.5 rounded-full shadow-sm">Fermer</button>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {BADGES_LIST.map(badge => (
-                <div key={badge.id} className={`p-4 rounded-2xl flex flex-col items-center text-center ${progress.badges.includes(badge.id) ? 'bg-white shadow-md border-b-4 border-rose-500' : 'bg-gray-100 opacity-40'}`}>
-                  <span className="text-4xl mb-2">{badge.emoji}</span>
-                  <h4 className="text-xs font-black text-gray-800">{badge.name}</h4>
-                </div>
-              ))}
-            </div>
-          </div>
+          <PremiumBadges progress={progress} onBack={() => setMode(AppMode.SELECTION)} />
         ) : null}
       </main>
 
+      {/* Célébration Premium */}
       {showCelebration && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-rose-900/70 backdrop-blur-md p-6">
-          <div className="bg-white/80 backdrop-blur-md w-full max-w-sm p-8 rounded-[3.5rem] shadow-2xl border-[6px] border-yellow-400/50 flex flex-col items-center gap-5 text-center">
-            <div className="text-7xl animate-bounce">🏆</div>
-            <h2 className="text-3xl font-black text-rose-700 leading-tight">Macha Allah !</h2>
-            <div className="bg-rose-50 p-5 rounded-2xl border border-rose-100 text-gray-700 font-medium">"{celebrationData.compliment}"</div>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-md p-6 animate-in fade-in duration-500">
+          <div className="bg-surface-container-low w-full max-w-sm p-8 rounded-[3.5rem] shadow-2xl border border-surface-variant/30 flex flex-col items-center gap-6 text-center relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-secondary to-primary animate-pulse"></div>
+            
+            <div className="relative">
+              <div className="text-7xl animate-bounce drop-shadow-xl">🏆</div>
+              <div className="absolute -inset-4 bg-primary/20 blur-2xl rounded-full -z-10 animate-pulse"></div>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-3xl font-black text-on-surface leading-tight tracking-tight">Macha Allah !</h2>
+              <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Réussite Exceptionnelle</p>
+            </div>
+
+            <div className="bg-primary/5 p-5 rounded-3xl border border-primary/10 text-on-surface-variant font-medium italic text-sm leading-relaxed">
+              "{celebrationData.compliment}"
+            </div>
+
             {celebrationData.badge && (
-              <div className="flex flex-col items-center">
-                <div className="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center text-5xl border-2 border-yellow-300">{celebrationData.badge.emoji}</div>
-                <p className="font-black text-sm text-yellow-600 uppercase tracking-widest mt-2">{celebrationData.badge.name}</p>
+              <div className="flex flex-col items-center gap-3 p-4 bg-surface-container rounded-[2rem] border border-surface-variant/20 w-full">
+                <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl flex items-center justify-center text-4xl border border-primary/20 shadow-inner">
+                  {celebrationData.badge.emoji}
+                </div>
+                <div className="space-y-0.5">
+                  <p className="font-black text-[10px] text-primary uppercase tracking-widest">Nouveau Badge</p>
+                  <p className="text-sm font-black text-on-surface">{celebrationData.badge.name}</p>
+                </div>
               </div>
             )}
-            <button onClick={closeCelebration} className={`w-full py-5 rounded-[1.8rem] text-white text-xl font-black shadow-lg ${buttonClasses[progress.theme]}`}>Génial ! 🚀</button>
+
+            <button 
+              onClick={closeCelebration} 
+              className="w-full py-5 rounded-[2rem] bg-primary text-on-primary text-xl font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
+            >
+              Génial ! 🚀
+            </button>
           </div>
         </div>
       )}
 
+      {/* Espace Parents Premium */}
       {showParentalValidation && (
-        <div className="fixed inset-0 z-[110] flex items-end sm:items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
-          <div className="bg-white/80 backdrop-blur-md w-full max-w-md p-6 rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl">
-            <h2 className="text-2xl font-black text-slate-800 text-center mb-1">Espace Parents</h2>
-            <p className="text-slate-500 text-center mb-6 text-sm">Entrez votre code pour valider la sourate.</p>
-            <input type="password" inputMode="numeric" value={parentInput} onChange={(e) => setParentInput(e.target.value)} placeholder="•••••" className="w-full text-center py-4 bg-white rounded-xl border-2 border-slate-200 text-3xl font-black focus:border-rose-500 outline-none tracking-[0.5rem] mb-6" />
-            <button onClick={handleParentConfirm} className="w-full py-5 bg-rose-600 text-white rounded-2xl text-lg font-black shadow-lg">Valider ✅</button>
-            <button onClick={() => setShowParentalValidation(false)} className="w-full py-4 text-slate-400 font-bold text-sm">Annuler</button>
+        <div className="fixed inset-0 z-[110] flex items-end sm:items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-in fade-in slide-in-from-bottom-10 duration-500">
+          <div className="bg-surface-container-low w-full max-w-md p-8 rounded-t-[3.5rem] sm:rounded-[3.5rem] shadow-2xl border-t sm:border border-surface-variant/30">
+            <div className="w-12 h-1.5 bg-surface-variant/30 rounded-full mx-auto mb-8 sm:hidden"></div>
+            
+            <div className="text-center space-y-2 mb-8">
+              <div className="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center text-secondary mx-auto mb-4">
+                <span className="material-symbols-outlined text-3xl">family_restroom</span>
+              </div>
+              <h2 className="text-2xl font-black text-on-surface tracking-tight">Espace Parents</h2>
+              <p className="text-on-surface-variant text-sm font-medium">Entrez votre code pour valider la sourate.</p>
+            </div>
+
+            <div className="relative mb-8">
+              <input 
+                type="password" 
+                inputMode="numeric" 
+                value={parentInput} 
+                onChange={(e) => setParentInput(e.target.value)} 
+                placeholder="•••••" 
+                className="w-full text-center py-6 bg-surface-container rounded-3xl border border-surface-variant/30 text-4xl font-black text-primary focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none tracking-[0.75rem] transition-all" 
+              />
+            </div>
+
+            <div className="space-y-3">
+              <button 
+                onClick={handleParentConfirm} 
+                className="w-full py-5 bg-primary text-on-primary rounded-[2rem] text-lg font-black shadow-lg shadow-primary/20 active:scale-95 transition-all"
+              >
+                Valider ✅
+              </button>
+              <button 
+                onClick={() => setShowParentalValidation(false)} 
+                className="w-full py-4 text-on-surface-variant/60 font-black text-sm uppercase tracking-widest hover:text-on-surface transition-colors"
+              >
+                Annuler
+              </button>
+            </div>
           </div>
         </div>
       )}

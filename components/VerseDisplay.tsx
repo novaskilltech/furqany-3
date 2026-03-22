@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Verse, AppTheme, Reciter } from '../types';
 import { useTranslation } from 'react-i18next';
@@ -14,21 +13,6 @@ interface VerseDisplayProps {
   onVerseEnded?: () => void;
 }
 
-const themeColors = {
-  emerald: 'border-emerald-100 bg-emerald-600',
-  gold: 'border-amber-100 bg-amber-500',
-  indigo: 'border-indigo-100 bg-indigo-600',
-  rose: 'border-rose-100 bg-rose-500',
-};
-
-const fontSizeMap: { [key: number]: string } = {
-  1: 'text-2xl',
-  2: 'text-3xl',
-  3: 'text-4xl',
-  4: 'text-5xl',
-  5: 'text-6xl',
-};
-
 export const VerseDisplay: React.FC<VerseDisplayProps> = ({ 
   verse, surahIdString, theme, reciter, fontSizeScale = 3, onValidate, isAutoPlay, onVerseEnded 
 }) => {
@@ -40,7 +24,6 @@ export const VerseDisplay: React.FC<VerseDisplayProps> = ({
   const [currentRepeat, setCurrentRepeat] = useState(1);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
-  const fontSizeClass = fontSizeMap[fontSizeScale] || fontSizeMap[3];
   const verseNum = verse.number.toString().padStart(3, '0');
   
   const reciterUrlMap: { [key in Reciter]: string } = {
@@ -55,9 +38,8 @@ export const VerseDisplay: React.FC<VerseDisplayProps> = ({
     setIsLoading(false);
     setCurrentRepeat(1);
     
-    // Auto-play when verse changes if prop is true
     if (isAutoPlay) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         if (audioRef.current) {
           setIsLoading(true);
           audioRef.current.play().catch(err => {
@@ -66,7 +48,8 @@ export const VerseDisplay: React.FC<VerseDisplayProps> = ({
             setIsLoading(false);
           });
         }
-      }, 500); // Small delay for smooth transition
+      }, 800);
+      return () => clearTimeout(timer);
     }
   }, [verse, surahIdString, isAutoPlay]);
 
@@ -74,7 +57,6 @@ export const VerseDisplay: React.FC<VerseDisplayProps> = ({
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
-        setCurrentRepeat(1);
       } else {
         setHasError(false);
         setIsLoading(true);
@@ -102,64 +84,100 @@ export const VerseDisplay: React.FC<VerseDisplayProps> = ({
   };
 
   return (
-    <div className={`w-full bg-white rounded-[2.5rem] p-6 shadow-xl border-2 ${themeColors[theme].split(' ')[0]} flex flex-col items-center gap-5`}>
-      <div className="flex justify-between w-full items-center">
-        <div className="flex flex-col gap-1">
-          <div className={`${themeColors[theme].split(' ')[1]} text-white px-4 py-1.5 rounded-full text-sm font-black shadow-sm w-fit`}>
-            {t('learning_verse')} {verse.number}
-          </div>
-          {isPlaying && repeatCount > 1 && (
-            <div className="text-[10px] font-black text-rose-500 uppercase tracking-widest ml-1">
-              {t('repetition')} {currentRepeat} / {repeatCount}
-            </div>
-          )}
-        </div>
+    <div className="w-full flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-700">
+      {/* Verse Bento Card */}
+      <div className="bg-surface-container-low rounded-[3rem] p-8 shadow-sm border border-surface-variant/30 flex flex-col gap-8 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full -mr-20 -mt-20 group-hover:scale-110 transition-transform duration-1000"></div>
         
-        <div className="flex items-center gap-2">
-          <div className="flex bg-gray-100 p-1 rounded-full border border-gray-200">
-            {[1, 3, 5].map(num => (
-              <button
-                key={num}
-                onClick={() => {
-                  setRepeatCount(num);
-                  if (isPlaying) {
-                    setIsPlaying(false);
-                    if (audioRef.current) audioRef.current.pause();
-                  }
-                }}
-                className={`w-10 h-10 rounded-full text-xs font-black transition-all ${
-                  repeatCount === num 
-                    ? themeColors[theme].split(' ')[1] + ' text-white shadow-md' 
-                    : 'text-gray-400 hover:bg-gray-200'
-                }`}
-              >
-                x{num}
-              </button>
-            ))}
-          </div>
-
-          <button 
-            onClick={toggleAudio}
-            disabled={isLoading && !isPlaying}
-            className={`w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg active:scale-90 transition-transform relative ${
-              hasError ? 'bg-red-500' : (isLoading && !isPlaying ? 'bg-gray-300' : themeColors[theme].split(' ')[1])
-            }`}
-          >
-            {isLoading && !isPlaying && (
-              <div className="absolute inset-0 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+        {/* Header: Verse Number & Controls */}
+        <div className="flex justify-between items-center relative z-10">
+          <div className="flex flex-col gap-1">
+            <div className="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-sm border border-primary/10 flex items-center gap-2">
+              <span className="material-symbols-outlined text-sm">bookmark</span>
+              {t('learning_verse')} {verse.number}
+            </div>
+            {isPlaying && repeatCount > 1 && (
+              <div className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] ml-1 mt-1">
+                {t('repetition')} {currentRepeat} / {repeatCount}
+              </div>
             )}
-            <span className="text-2xl z-10">
-              {hasError ? '⚠️' : (isPlaying ? '⏸️' : '▶️')}
-            </span>
-          </button>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            {/* Repetition Selector */}
+            <div className="flex bg-surface-container-high p-1 rounded-pill border border-surface-variant/30">
+              {[1, 3, 5].map(num => (
+                <button
+                  key={num}
+                  onClick={() => {
+                    setRepeatCount(num);
+                    if (isPlaying) {
+                      setIsPlaying(false);
+                      if (audioRef.current) audioRef.current.pause();
+                    }
+                  }}
+                  className={`w-10 h-10 rounded-full text-xs font-black transition-all ${
+                    repeatCount === num 
+                      ? 'bg-primary text-on-primary shadow-md' 
+                      : 'text-on-surface/40 hover:text-on-surface/70'
+                  }`}
+                >
+                  x{num}
+                </button>
+              ))}
+            </div>
+
+            {/* Play/Pause Button */}
+            <button 
+              onClick={toggleAudio}
+              disabled={isLoading && !isPlaying}
+              className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg active:scale-90 transition-all relative ${
+                hasError ? 'bg-error' : (isLoading && !isPlaying ? 'bg-surface-variant' : 'bg-primary shadow-primary/30')
+              }`}
+            >
+              {isLoading && !isPlaying && (
+                <div className="absolute inset-0 border-4 border-white/20 border-t-white rounded-2xl animate-spin"></div>
+              )}
+              <span className="material-symbols-outlined text-3xl z-10" style={{ fontVariationSettings: `'FILL' 1` }}>
+                {hasError ? 'error' : (isPlaying ? 'pause' : 'play_arrow')}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Arabic Text Section */}
+        <div 
+          className="quran-text py-4 font-bold leading-[1.8] w-full text-center px-2 relative z-10" 
+          style={{ 
+            wordBreak: 'keep-all', 
+            direction: 'rtl',
+            fontSize: `${(fontSizeScale || 3) * 1.5}rem`
+          }}
+        >
+          <span className="text-on-surface drop-shadow-sm select-none">
+            {verse.arabic}
+          </span>
+        </div>
+
+        {/* Divider */}
+        <div className="w-full h-px bg-surface-variant/30 relative z-10"></div>
+
+        {/* Translation Section */}
+        <div className="w-full bg-surface-container-high/50 p-6 rounded-[2rem] border border-surface-variant/20 relative z-10">
+          <p className="text-on-surface/60 text-[14px] font-bold leading-relaxed italic text-center">
+            {verse.french}
+          </p>
         </div>
       </div>
 
+      {/* Action Footers: Validate Button */}
       <button 
         onClick={onValidate}
-        className={`w-full py-4 rounded-2xl font-black text-lg shadow-md active:translate-y-0.5 transition-all ${themeColors[theme].split(' ')[1]} text-white`}
+        className="w-full py-5 bg-secondary rounded-[2rem] font-black text-xl text-on-secondary shadow-lg shadow-secondary/20 active:translate-y-1 transition-all flex items-center justify-center gap-3 relative overflow-hidden group"
       >
-        {t('learning_validate')} ✅
+        <span className="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">check_circle</span>
+        {t('learning_validate')}
+        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </button>
 
       <audio 
@@ -173,21 +191,6 @@ export const VerseDisplay: React.FC<VerseDisplayProps> = ({
         onCanPlay={() => setIsLoading(false)}
         preload="auto"
       />
-      
-      <div 
-        className={`quran-text ${fontSizeClass} text-gray-800 py-4 font-bold leading-normal w-full text-center px-2`} 
-        style={{ wordBreak: 'keep-all', direction: 'rtl' }}
-      >
-        {verse.arabic}
-      </div>
-
-      <div className="w-full h-px bg-gray-50"></div>
-
-      <div className="text-center w-full bg-slate-50 p-4 rounded-2xl border border-slate-100">
-        <p className="text-gray-600 text-sm font-medium leading-relaxed italic">
-          {verse.french}
-        </p>
-      </div>
     </div>
   );
 };

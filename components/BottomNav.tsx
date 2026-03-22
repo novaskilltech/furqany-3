@@ -12,46 +12,53 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentMode, onModeChange,
   const { t } = useTranslation();
   
   const navItems = [
-    { mode: AppMode.SELECTION, icon: '📖', label: t('nav_quran', 'Coran') },
-    { mode: AppMode.ADHKARS, icon: '🌅', label: t('nav_adhkars', 'Adhkars') },
-    { mode: AppMode.GAMES, icon: '🎮', label: t('nav_games', 'Jeux') }
+    { mode: AppMode.SELECTION, icon: 'home', label: t('nav_home', 'Accueil') },
+    { mode: AppMode.ADHKARS, icon: 'auto_awesome', label: t('nav_adhkars', 'Invocations') },
+    { mode: AppMode.BADGES, icon: 'emoji_events', label: t('nav_journey', 'Mon Parcours'), fill: true },
+    { mode: AppMode.GAMES, icon: 'videogame_asset', label: t('nav_games', 'Jeux') }
   ];
 
   const isActive = (itemMode: AppMode) => {
-    // If we are in LEARNING mode, consider SELECTION as active in the nav
-    if (itemMode === AppMode.SELECTION && currentMode === AppMode.LEARNING) {
-      return true;
-    }
+    if (itemMode === AppMode.SELECTION && currentMode === AppMode.LEARNING) return true;
     return currentMode === itemMode;
   };
 
-  const isVisible = [AppMode.SELECTION, AppMode.ADHKARS, AppMode.GAMES, AppMode.BADGES, AppMode.COMPLETED_LIST].includes(currentMode);
+  const isVisible = [
+    AppMode.SELECTION, 
+    AppMode.ADHKARS, 
+    AppMode.GAMES, 
+    AppMode.BADGES, 
+    AppMode.COMPLETED_LIST
+  ].includes(currentMode);
 
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/80 backdrop-blur-xl border-t border-white/50 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-40">
-      <div className="flex justify-around items-center px-2 py-3">
-        {navItems.map((item) => {
-          const active = isActive(item.mode);
-          return (
-            <button
-              key={item.mode}
-              onClick={() => onModeChange(item.mode)}
-              className={`flex flex-col items-center justify-center w-20 h-14 rounded-2xl transition-all duration-300 ${
-                active 
-                  ? 'bg-gradient-to-br from-indigo-50 to-rose-50 border border-white/60 shadow-sm scale-105' 
-                  : 'text-gray-400 hover:text-gray-600 active:scale-95'
-              }`}
+    <nav className="fixed bottom-0 w-full rounded-t-[3rem] z-50 bg-[#ffffff] dark:bg-[#1a1c1b] shadow-[0_-8px_32px_rgba(45,52,50,0.06)] h-24 px-4 pb-safe flex justify-around items-center">
+      {navItems.map((item) => {
+        const active = isActive(item.mode);
+        return (
+          <button
+            key={item.mode}
+            onClick={() => onModeChange(item.mode)}
+            className={`flex flex-col items-center justify-center transition-all duration-300 ${
+              active 
+                ? 'bg-[#b1f0ce] dark:bg-[#2D6A4F] text-[#2D6A4F] dark:text-[#f8faf8] rounded-full px-5 py-2 scale-110 shadow-md transform active:scale-95' 
+                : 'text-[#5755A9] dark:text-[#a6a4d9] opacity-70 hover:bg-[#e2dfff] dark:hover:bg-[#4a479b]/20 p-2 rounded-full cursor-pointer'
+            }`}
+          >
+            <span 
+              className="material-symbols-outlined text-2xl"
+              style={{ fontVariationSettings: `'FILL' ${active ? 1 : 0}, 'wght' 400, 'GRAD' 0, 'opsz' 24` }}
             >
-              <span className={`text-2xl mb-0.5 transition-transform duration-300 ${active ? 'scale-110 drop-shadow-sm' : 'opacity-70 grayscale'}`}>{item.icon}</span>
-              <span className={`text-[10px] font-bold ${active ? (theme === 'rose' ? 'text-rose-600' : 'text-indigo-600') : 'text-gray-400'}`}>
-                {item.label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
+              {item.icon}
+            </span>
+            <span className="font-body text-[11px] font-semibold mt-1">
+              {item.label}
+            </span>
+          </button>
+        );
+      })}
+    </nav>
   );
 };

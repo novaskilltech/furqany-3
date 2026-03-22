@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppTheme, UserProgress, Surah } from '../types';
+import { AppTheme, UserProgress } from '../types';
 import { SHORT_SURAHS } from '../constants';
 
 interface GamesSectionProps {
@@ -101,7 +100,6 @@ export const GamesSection: React.FC<GamesSectionProps> = ({ progress, setProgres
     const currentVerse = surah.verses[idx].arabic;
     const nextVerse = surah.verses[idx+1].arabic;
     
-    // Get distractors from other verses or surahs
     const distractors = SHORT_SURAHS.flatMap(s => s.verses)
       .map(v => v.arabic)
       .filter(v => v !== nextVerse)
@@ -197,152 +195,230 @@ export const GamesSection: React.FC<GamesSectionProps> = ({ progress, setProgres
     } else triggerFeedback(t('not_quite'));
   };
 
-  const themeColors = {
-    rose: 'text-rose-600 bg-rose-50 border-rose-200',
-    emerald: 'text-emerald-600 bg-emerald-50 border-emerald-200',
-    gold: 'text-amber-600 bg-amber-50 border-amber-200',
-    indigo: 'text-indigo-600 bg-indigo-50 border-indigo-200',
-  };
-
   return (
-    <div className={`bg-white/95 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border-4 border-white animate-in zoom-in duration-300 min-h-[450px] flex flex-col relative overflow-hidden ${isError ? 'animate-shake' : ''}`}>
-      <div className="flex items-center justify-between mb-6">
-        <h3 className={`text-xl font-black ${theme === 'rose' ? 'text-rose-800' : 'text-emerald-800'}`}>{t('games_title')}</h3>
-        <button onClick={onClose} className="bg-gray-100 px-4 py-1.5 rounded-full font-bold text-gray-500 text-sm active:scale-95">{t('games_exit')}</button>
+    <div className={`bg-surface-container-low rounded-[3rem] p-8 shadow-sm border border-surface-variant/30 animate-in zoom-in duration-700 min-h-[500px] flex flex-col relative overflow-hidden ${isError ? 'animate-shake' : ''}`}>
+      {/* Game Header */}
+      <div className="flex items-center justify-between mb-8 relative z-10">
+        <h3 className="text-2xl font-black text-on-surface tracking-tight">{t('games_title')}</h3>
+        <button 
+          onClick={onClose} 
+          className="w-12 h-12 rounded-2xl bg-surface-container-high flex items-center justify-center text-on-surface/40 hover:text-on-surface active:scale-90 transition-all"
+        >
+          <span className="material-symbols-outlined">close</span>
+        </button>
       </div>
 
       {feedback && (
-        <div className="absolute top-16 left-4 right-4 z-20 animate-in slide-in-from-top-2">
-          <div className={`p-3 rounded-xl border-2 shadow-lg text-center font-bold text-sm ${themeColors[theme]}`}>
+        <div className="absolute top-24 left-8 right-8 z-20 animate-in slide-in-from-top-4">
+          <div className="p-4 rounded-[1.5rem] bg-error-container text-on-error-container border border-error/20 shadow-lg text-center font-black text-sm uppercase tracking-widest">
             {feedback}
           </div>
         </div>
       )}
 
       {currentGame === 'selection' && (
-        <div className="flex flex-col gap-4 flex-1">
-          {/* Range Selector */}
-          <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100 space-y-3">
+        <div className="flex flex-col gap-6 flex-1 relative z-10">
+          {/* Range Bento Section */}
+          <div className="bg-surface-container-highest/30 p-6 rounded-[2rem] border border-surface-variant/20 space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-slate-600 flex items-center gap-2">
-                🎯 {t('game_range.title')}
+              <span className="text-xs font-black text-secondary uppercase tracking-[0.2em] flex items-center gap-2">
+                <span className="material-symbols-outlined text-sm">target</span>
+                {t('game_range.title')}
               </span>
               <button 
                 onClick={() => setIsRangeEnabled(!isRangeEnabled)}
-                className={`w-12 h-6 rounded-full transition-all relative ${isRangeEnabled ? (theme === 'rose' ? 'bg-rose-500' : 'bg-emerald-500') : 'bg-slate-300'}`}
+                className={`w-14 h-8 rounded-full transition-all relative p-1 ${isRangeEnabled ? 'bg-primary' : 'bg-surface-variant'}`}
               >
-                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${isRangeEnabled ? 'right-1' : 'left-1'}`} />
+                <div className={`w-6 h-6 bg-white rounded-full transition-all shadow-sm ${isRangeEnabled ? 'translate-x-6' : 'translate-x-0'}`} />
               </button>
             </div>
 
             {isRangeEnabled && (
-              <div className="flex items-center gap-3 animate-in slide-in-from-top-1">
-                <div className="flex-1 space-y-1">
-                  <label className="text-[10px] font-black uppercase text-slate-400 ml-1">{t('game_range.from')}</label>
+              <div className="flex items-center gap-4 animate-in slide-in-from-top-2 duration-500">
+                <div className="flex-1 space-y-2">
+                  <label className="text-[10px] font-black uppercase text-on-surface/40 ml-1">{t('game_range.from')}</label>
                   <input 
                     type="number" 
                     min="1" 
                     max={rangeEnd} 
                     value={rangeStart} 
                     onChange={(e) => setRangeStart(Math.max(1, parseInt(e.target.value) || 1))}
-                    className="w-full p-2 bg-white rounded-xl border border-slate-200 text-sm font-bold focus:outline-none focus:border-emerald-300 transition-all text-center shadow-sm"
+                    className="w-full h-12 bg-surface-container-lowest rounded-xl border border-surface-variant/30 text-sm font-black focus:outline-none focus:border-primary transition-all text-center"
                   />
                 </div>
-                <div className="pt-4 text-slate-300">➡</div>
-                <div className="flex-1 space-y-1">
-                  <label className="text-[10px] font-black uppercase text-slate-400 ml-1">{t('game_range.to')}</label>
+                <div className="pt-6 text-surface-variant">
+                  <span className="material-symbols-outlined">arrow_forward</span>
+                </div>
+                <div className="flex-1 space-y-2">
+                  <label className="text-[10px] font-black uppercase text-on-surface/40 ml-1">{t('game_range.to')}</label>
                   <input 
                     type="number" 
                     min={rangeStart} 
                     max="114" 
                     value={rangeEnd} 
                     onChange={(e) => setRangeEnd(Math.min(114, parseInt(e.target.value) || 114))}
-                    className="w-full p-2 bg-white rounded-xl border border-slate-200 text-sm font-bold focus:outline-none focus:border-emerald-300 transition-all text-center shadow-sm"
+                    className="w-full h-12 bg-surface-container-lowest rounded-xl border border-surface-variant/30 text-sm font-black focus:outline-none focus:border-primary transition-all text-center"
                   />
                 </div>
               </div>
             )}
           </div>
 
-          <div className="grid gap-3 overflow-y-auto pr-1">
-            <button onClick={startMemory} className={`p-5 bg-gradient-to-r ${theme === 'rose' ? 'from-rose-400 to-pink-500' : 'from-emerald-400 to-teal-500'} text-white rounded-[1.8rem] shadow-md flex items-center justify-between active:scale-95 transition-transform`}>
-            <div className="text-left"><span className="text-3xl">🧩</span><h4 className="text-lg font-black mt-1">{t('game_memory')}</h4></div>
-            <div className="bg-white/20 p-2 rounded-full">➡</div>
-          </button>
-          <button onClick={startPuzzle} className="p-5 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-[1.8rem] shadow-md flex items-center justify-between active:scale-95 transition-transform">
-            <div className="text-left"><span className="text-3xl">📝</span><h4 className="text-lg font-black mt-1">{t('game_words')}</h4></div>
-            <div className="bg-white/20 p-2 rounded-full">➡</div>
-          </button>
-          <button onClick={startSequence} className="p-5 bg-gradient-to-r from-purple-400 to-indigo-500 text-white rounded-[1.8rem] shadow-md flex items-center justify-between active:scale-95 transition-transform">
-            <div className="text-left"><span className="text-3xl">📖</span><h4 className="text-lg font-black mt-1">{t('game_sequence')}</h4></div>
-            <div className="bg-white/20 p-2 rounded-full">➡</div>
-          </button>
-          <button onClick={startMath} className="p-5 bg-gradient-to-r from-indigo-400 to-blue-500 text-white rounded-[1.8rem] shadow-md flex items-center justify-between active:scale-95 transition-transform">
-            <div className="text-left"><span className="text-3xl">🔢</span><h4 className="text-lg font-black mt-1">{t('game_math')}</h4></div>
-            <div className="bg-white/20 p-2 rounded-full">➡</div>
-          </button>
+          {/* Games Grid */}
+          <div className="grid grid-cols-1 gap-4 overflow-y-auto pr-1 flex-1 no-scrollbar">
+            <button onClick={startMemory} className="p-6 bg-gradient-to-tr from-primary/10 to-primary/5 rounded-[2.5rem] border border-primary/20 flex items-center justify-between group active:scale-98 transition-all">
+              <div className="flex items-center gap-5 text-left">
+                <div className="w-16 h-16 rounded-2xl bg-primary text-on-primary flex items-center justify-center shadow-lg shadow-primary/20">
+                  <span className="material-symbols-outlined text-3xl">extension</span>
+                </div>
+                <div>
+                  <h4 className="text-xl font-black text-on-surface">{t('game_memory')}</h4>
+                  <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mt-1">Niveau Débutant</p>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-primary/40 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </button>
+
+            <button onClick={startPuzzle} className="p-6 bg-gradient-to-tr from-secondary/10 to-secondary/5 rounded-[2.5rem] border border-secondary/20 flex items-center justify-between group active:scale-98 transition-all">
+              <div className="flex items-center gap-5 text-left">
+                <div className="w-16 h-16 rounded-2xl bg-secondary text-on-secondary flex items-center justify-center shadow-lg shadow-secondary/20">
+                  <span className="material-symbols-outlined text-3xl">edit_note</span>
+                </div>
+                <div>
+                  <h4 className="text-xl font-black text-on-surface">{t('game_words')}</h4>
+                  <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mt-1">Intermédiaire</p>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-secondary/40 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </button>
+
+            <button onClick={startSequence} className="p-6 bg-gradient-to-tr from-tertiary/10 to-tertiary/5 rounded-[2.5rem] border border-tertiary/20 flex items-center justify-between group active:scale-98 transition-all">
+              <div className="flex items-center gap-5 text-left">
+                <div className="w-16 h-16 rounded-2xl bg-tertiary text-on-tertiary flex items-center justify-center shadow-lg shadow-tertiary/20">
+                  <span className="material-symbols-outlined text-3xl">auto_stories</span>
+                </div>
+                <div>
+                  <h4 className="text-xl font-black text-on-surface">{t('game_sequence')}</h4>
+                  <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mt-1">Avancé</p>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-tertiary/40 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </button>
+
+            <button onClick={startMath} className="p-6 bg-gradient-to-tr from-primary/10 to-primary/5 rounded-[2.5rem] border border-primary/20 flex items-center justify-between group active:scale-98 transition-all">
+              <div className="flex items-center gap-5 text-left">
+                <div className="w-16 h-16 rounded-2xl bg-on-surface text-surface flex items-center justify-center shadow-lg">
+                  <span className="material-symbols-outlined text-3xl">calculate</span>
+                </div>
+                <div>
+                  <h4 className="text-xl font-black text-on-surface">{t('game_math')}</h4>
+                  <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mt-1">Défis Quotidien</p>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-on-surface/40 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </button>
+          </div>
         </div>
-      </div>
       )}
 
       {currentGame === 'memory' && (
-        <div className="flex flex-col items-center flex-1 justify-center">
-          <div className="grid grid-cols-4 gap-2 mb-6">
+        <div className="flex flex-col items-center flex-1 justify-center animate-in zoom-in duration-500">
+          <div className="grid grid-cols-4 gap-3 mb-10">
             {memoryCards.map(card => (
-              <button key={card.id} onClick={() => handleCardClick(card.id)} className={`w-14 h-14 rounded-xl text-xl flex items-center justify-center transition-all duration-300 shadow-sm ${card.flipped || card.solved ? 'bg-white' : `${theme === 'rose' ? 'bg-rose-500' : 'bg-emerald-500'}`}`}>
-                {(card.flipped || card.solved) ? card.emoji : '❓'}
+              <button 
+                key={card.id} 
+                onClick={() => handleCardClick(card.id)} 
+                className={`w-16 h-16 rounded-2xl text-2xl flex items-center justify-center transition-all duration-500 shadow-sm border border-surface-variant/30 ${card.flipped || card.solved ? 'bg-surface-container-lowest rotate-0' : 'bg-primary rotate-y-180'}`}
+              >
+                {(card.flipped || card.solved) ? card.emoji : (
+                   <span className="material-symbols-outlined text-on-primary">star</span>
+                )}
               </button>
             ))}
           </div>
-          <button onClick={() => setCurrentGame('selection')} className="text-gray-400 font-bold text-sm bg-gray-50 px-6 py-2 rounded-full">{t('games_back')}</button>
+          <button 
+            onClick={() => setCurrentGame('selection')} 
+            className="h-14 px-10 rounded-[2rem] bg-surface-container-high font-black text-xs uppercase tracking-widest text-on-surface/40 active:scale-95 transition-all"
+          >
+            {t('games_back')}
+          </button>
         </div>
       )}
 
       {currentGame === 'puzzle' && puzzleData && (
-        <div className="flex flex-col items-center gap-4 text-center flex-1">
-          <div className="bg-slate-50 p-4 rounded-2xl border border-emerald-50 w-full mb-2">
-            <p className="text-2xl quran-text text-gray-800 leading-normal">{puzzleData.verse}</p>
+        <div className="flex flex-col items-center gap-6 text-center flex-1 animate-in slide-in-from-right-4 duration-500">
+          <div className="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 w-full mb-4">
+            <p className="text-3xl quran-text text-on-surface leading-loose drop-shadow-sm" dir="rtl">{puzzleData.verse}</p>
           </div>
-          <div className="grid grid-cols-2 gap-2 w-full">
+          <div className="grid grid-cols-2 gap-4 w-full">
             {puzzleData.options.map(opt => (
-              <button key={opt} onClick={() => handlePuzzleSelect(opt)} className="py-4 bg-white rounded-xl border border-emerald-100 text-xl font-bold active:bg-emerald-50 shadow-sm">
+              <button 
+                key={opt} 
+                onClick={() => handlePuzzleSelect(opt)} 
+                className="h-20 bg-surface-container-low rounded-2xl border border-surface-variant/30 text-2xl quran-text font-bold active:bg-primary active:text-on-primary hover:border-primary/40 transition-all shadow-sm flex items-center justify-center"
+              >
                 {opt}
               </button>
             ))}
           </div>
-          <button onClick={() => setCurrentGame('selection')} className="text-gray-400 font-bold text-sm bg-gray-50 px-6 py-2 rounded-full mt-2">{t('games_back')}</button>
+          <button 
+            onClick={() => setCurrentGame('selection')} 
+            className="mt-4 h-14 px-10 rounded-[2rem] bg-surface-container-high font-black text-xs uppercase tracking-widest text-on-surface/40"
+          >
+            {t('games_back')}
+          </button>
         </div>
       )}
 
       {currentGame === 'math' && mathData && (
-        <div className="flex flex-col items-center gap-4 text-center flex-1 justify-center">
-          <div className="bg-indigo-50 p-6 rounded-[2rem] border-2 border-white shadow-inner w-full mb-2">
-            <p className="text-5xl font-black text-indigo-600">{mathData.question}</p>
+        <div className="flex flex-col items-center gap-6 text-center flex-1 justify-center animate-in zoom-in-95 duration-500">
+          <div className="bg-primary/5 p-12 rounded-[3rem] border-2 border-primary/10 shadow-inner w-full mb-4">
+            <p className="text-6xl font-black text-primary tracking-tighter">{mathData.question}</p>
           </div>
-          <div className="grid grid-cols-2 gap-2 w-full">
+          <div className="grid grid-cols-2 gap-4 w-full">
             {mathData.options.map(opt => (
-              <button key={opt} onClick={() => handleMathSelect(opt)} className="py-5 bg-white rounded-2xl border border-indigo-50 text-2xl font-black text-indigo-700 active:bg-indigo-50 shadow-sm">
+              <button 
+                key={opt} 
+                onClick={() => handleMathSelect(opt)} 
+                className="h-20 bg-surface-container-low rounded-2xl border border-surface-variant/30 text-3xl font-black text-on-surface active:bg-primary active:text-on-primary transition-all shadow-sm"
+              >
                 {opt}
               </button>
             ))}
           </div>
-          <button onClick={() => setCurrentGame('selection')} className="text-indigo-400 font-bold text-sm bg-indigo-50 px-6 py-2 rounded-full mt-2">{t('games_back')}</button>
+          <button 
+            onClick={() => setCurrentGame('selection')} 
+            className="mt-4 h-14 px-10 rounded-[2rem] bg-surface-container-high font-black text-xs uppercase tracking-widest text-on-surface/40"
+          >
+            {t('games_back')}
+          </button>
         </div>
       )}
+
       {currentGame === 'sequence' && sequenceData && (
-        <div className="flex flex-col items-center gap-4 text-center flex-1">
-          <div className="bg-purple-50 p-4 rounded-2xl border border-purple-100 w-full mb-2">
-            <span className="text-xs font-bold text-purple-400 uppercase tracking-widest">{t('next_verse_q')}</span>
-            <p className="text-2xl quran-text text-gray-800 leading-normal mt-2">{sequenceData.currentVerse}</p>
+        <div className="flex flex-col items-center gap-6 text-center flex-1 animate-in slide-in-from-bottom-4 duration-500">
+          <div className="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 w-full mb-4">
+            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-4 block">{t('next_verse_q')}</span>
+            <p className="text-3xl quran-text text-on-surface leading-loose" dir="rtl">{sequenceData.currentVerse}</p>
           </div>
-          <div className="grid gap-2 w-full">
+          <div className="grid gap-3 w-full">
             {sequenceData.options.map((opt, i) => (
-              <button key={i} onClick={() => handleSequenceSelect(opt)} className="p-3 bg-white rounded-xl border border-purple-50 text-lg quran-text active:bg-purple-50 shadow-sm leading-relaxed">
+              <button 
+                key={i} 
+                onClick={() => handleSequenceSelect(opt)} 
+                className="p-5 bg-surface-container-low rounded-2xl border border-surface-variant/30 text-xl quran-text active:bg-primary active:text-on-primary transition-all shadow-sm leading-relaxed text-right" 
+                dir="rtl"
+              >
                 {opt}
               </button>
             ))}
           </div>
-          <button onClick={() => setCurrentGame('selection')} className="text-gray-400 font-bold text-sm bg-gray-50 px-6 py-2 rounded-full mt-2">{t('games_back')}</button>
+          <button 
+            onClick={() => setCurrentGame('selection')} 
+            className="mt-4 h-14 px-10 rounded-[2rem] bg-surface-container-high font-black text-xs uppercase tracking-widest text-on-surface/40"
+          >
+            {t('games_back')}
+          </button>
         </div>
       )}
     </div>

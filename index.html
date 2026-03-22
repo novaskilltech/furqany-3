@@ -5,63 +5,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <title>FURQANY 🌟📖</title>
-    <meta name="description" content="Apprends les sourates avec Lumi l'étoile et la belle voix de Cheikh Mahmoud Ali Al Banna.">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://furqany-30.vercel.app/">
-    <meta property="og:title" content="FURQANY 🌟📖 — Ton voyage coranique">
-    <meta property="og:description" content="Une application ludique et interactive pour aider les enfants dès 4 ans à apprendre et mémoriser le Coran.">
-    <meta property="og:image" content="https://furqany-30.vercel.app/og-image.png">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://furqany-30.vercel.app/">
-    <meta property="twitter:title" content="FURQANY 🌟📖 — Ton voyage coranique">
-    <meta property="twitter:description" content="Une application ludique et interactive pour aider les enfants dès 4 ans à apprendre et mémoriser le Coran.">
-    <meta property="twitter:image" content="https://furqany-30.vercel.app/og-image.png">
+    <title>Furqany 3.0 🌟📖</title>
+    <meta name="description" content="Une expérience premium et ludique pour apprendre le Coran.">
     
     <!-- PWA & Mobile Web App Meta -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="FURQANY">
-    <meta name="theme-color" content="#fdf2f8">
+    <meta name="apple-mobile-web-app-title" content="Furqany 3.0">
+    <meta name="theme-color" content="#f8faf8">
     <link rel="manifest" href="manifest.json">
 
     <link rel="icon" type="image/png" href="/logo.png">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be_Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary": "#fbf7ff",
+              "on-tertiary-container": "#563e00",
+              "primary-fixed": "#b1f0ce",
+              "on-primary-fixed-variant": "#29664c",
+              "primary-container": "#b1f0ce",
+              "surface-container": "#ebefec",
+              "on-error-container": "#65000b",
+              "on-error": "#fff7f6",
+              "secondary-container": "#e2dfff",
+              "on-surface-variant": "#5a605f",
+              "tertiary-container": "#ffbf00",
+              "on-tertiary-fixed-variant": "#614700",
+              "surface-container-low": "#f1f4f2",
+              "on-secondary-container": "#4a479b",
+              "tertiary-dim": "#6b4e00",
+              "primary-dim": "#1f5e44",
+              "secondary": "#5755a9",
+              "on-surface": "#2d3432",
+              "surface-variant": "#dde4e1",
+              "primary-fixed-dim": "#a3e2c0",
+              "tertiary": "#7a5a00",
+              "secondary-fixed": "#e2dfff",
+              "outline": "#757c7a",
+              "error-container": "#f56965",
+              "surface-tint": "#2d6a4f",
+              "tertiary-fixed-dim": "#eeb200",
+              "background": "#f8faf8",
+              "inverse-surface": "#0b0f0e",
+              "on-background": "#2d3432",
+              "inverse-on-surface": "#9b9d9c",
+              "surface-container-high": "#e4e9e7",
+              "outline-variant": "#adb3b1",
+              "inverse-primary": "#beffdc",
+              "error-dim": "#70030f",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed": "#ffbf00",
+              "surface": "#f8faf8",
+              "primary": "#2d6a4f",
+              "on-secondary-fixed-variant": "#5352a5",
+              "secondary-dim": "#4b499c",
+              "error": "#ac3434",
+              "on-secondary-fixed": "#373487",
+              "on-primary": "#e6ffee",
+              "surface-bright": "#f8faf8",
+              "secondary-fixed-dim": "#d2d0ff",
+              "surface-container-highest": "#dde4e1",
+              "on-tertiary": "#fff8f1",
+              "surface-dim": "#d4dcd9",
+              "on-primary-container": "#1d5c42",
+              "on-primary-fixed": "#014931",
+              "on-tertiary-fixed": "#3d2b00"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
     <style>
-        @font-face {
-            font-family: 'KFGQPC_Hafs';
-            src: url('https://cdn.jsdelivr.net/gh/alif-type/quran-fonts@master/fonts/kfgqpc-uthman-taha-naskh/KFGQPC%20Uthman%20Taha%20Naskh.ttf') format('truetype');
-            font-display: swap;
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        :root {
-            --sat: env(safe-area-inset-top);
-            --sar: env(safe-area-inset-right);
-            --sab: env(safe-area-inset-bottom);
-            --sal: env(safe-area-inset-left);
+        .organic-shape-1 {
+            clip-path: circle(50% at 50% 50%);
         }
-        body {
-            font-family: 'Montserrat', sans-serif;
-            margin: 0;
-            background: #f8fafc;
-            overflow: hidden;
-            overscroll-behavior-y: none;
-            -webkit-tap-highlight-color: transparent;
+        .achievement-glow {
+            box-shadow: 0 0 20px rgba(87, 85, 169, 0.15);
         }
         .quran-text {
-            font-family: 'KFGQPC_Hafs', 'Amiri', 'Scheherazade New', serif;
+            font-family: 'KFGQPC_Hafs', serif;
             line-height: 2.2;
             text-align: center;
             direction: rtl;
-            font-feature-settings: "kern" 1, "calt" 1;
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-            word-spacing: 0.1em;
         }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { getChildFriendlyExplanation, generateMascotAudio, decodeAudioBuffer } from '../geminiService';
 import { Verse, AppTheme } from '../types';
@@ -12,13 +11,6 @@ interface MascotProps {
   userName?: string;
   isPremium: boolean;
 }
-
-const themeStyles = {
-  emerald: 'bg-emerald-600 border-emerald-200 bg-emerald-50',
-  gold: 'bg-amber-500 border-amber-200 bg-amber-50',
-  indigo: 'bg-indigo-600 border-indigo-200 bg-indigo-50',
-  rose: 'bg-rose-500 border-rose-200 bg-rose-50',
-};
 
 export const Mascot: React.FC<MascotProps> = ({ verse, surahName, theme, userName, isPremium }) => {
   const { t } = useTranslation();
@@ -35,7 +27,6 @@ export const Mascot: React.FC<MascotProps> = ({ verse, surahName, theme, userNam
     setLoading(true);
     
     try {
-      // Reprendre le contexte audio si suspendu (requis par les navigateurs modernes)
       if (audioCtx.state === 'suspended') {
         await audioCtx.resume();
       }
@@ -62,33 +53,43 @@ export const Mascot: React.FC<MascotProps> = ({ verse, surahName, theme, userNam
     }
   };
 
-  const currentStyles = themeStyles[theme].split(' ');
-
   return (
-    <div className={`flex flex-col items-center bg-white/90 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xl border-4 ${currentStyles[1]} transition-all w-full`}>
-      <div className="relative mb-4">
-        <div className={`w-20 h-20 ${currentStyles[0]} rounded-full flex items-center justify-center animate-pulse shadow-inner`}>
-           <span className="text-4xl">🌟</span>
+    <div className="w-full bg-surface-container-low rounded-[2.5rem] p-8 shadow-sm border border-surface-variant/30 flex flex-col items-center gap-6 animate-in fade-in slide-in-from-top-2 duration-700">
+      {/* Mascot Avatar Section */}
+      <div className="relative group">
+        <div className="w-24 h-24 bg-tertiary-container rounded-full flex items-center justify-center animate-pulse shadow-lg shadow-tertiary/20 border-4 border-surface-container-low relative z-10">
+          <span className="material-symbols-outlined text-5xl text-on-tertiary-container select-none group-hover:rotate-12 transition-transform">star</span>
         </div>
-        <div className="absolute -top-2 -right-2 bg-yellow-400 text-white rounded-full px-3 py-1 text-xs font-bold shadow-sm">
+        <div className="absolute -top-1 -right-1 bg-primary text-on-primary rounded-full px-4 py-1.5 text-[10px] font-black uppercase tracking-widest shadow-md z-20 border-2 border-surface-container-low">
           Lumi
         </div>
+        {/* Decorative Circles */}
+        <div className="absolute inset-0 bg-tertiary-container/30 rounded-full scale-125 -z-10 animate-ping opacity-20"></div>
       </div>
       
-      <div className={`${currentStyles[2]} p-5 rounded-2xl relative w-full border-2 border-white/50 shadow-inner`}>
-        <p className="text-gray-700 text-center font-medium text-lg leading-relaxed">
+      {/* Speech Bubble / Message */}
+      <div className="w-full bg-surface-container-highest/30 p-6 rounded-[2rem] border border-surface-variant/20 relative">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-surface-container-highest/30 rotate-45 border-l border-t border-surface-variant/20 -z-10"></div>
+        <p className="text-on-surface text-center font-bold text-lg leading-relaxed italic">
           {message}
         </p>
       </div>
 
+      {/* Action Button */}
       <button
         onClick={playExplanation}
         disabled={loading}
-        className={`mt-4 w-full py-4 rounded-2xl font-black text-white shadow-lg transition-all text-xl ${
-          loading ? 'bg-gray-400' : `${currentStyles[0]} hover:scale-[1.02] active:scale-95`
+        className={`w-full py-5 rounded-[2rem] font-black text-xl shadow-lg transition-all flex items-center justify-center gap-3 relative overflow-hidden group ${
+          loading 
+            ? 'bg-surface-variant text-on-surface/40' 
+            : 'bg-tertiary text-on-tertiary shadow-tertiary/20 hover:scale-[1.02] active:scale-95'
         }`}
       >
+        <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: `'FILL' 1` }}>
+          {loading ? 'hourglass_empty' : 'psychology'}
+        </span>
         {loading ? t('lumi_thinking') : t('lumi_explain')}
+        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </button>
     </div>
   );
