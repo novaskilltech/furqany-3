@@ -27,7 +27,7 @@ export interface Badge {
   arabicDescription?: string;
 }
 
-export type AppTheme = 'emerald' | 'gold' | 'indigo' | 'rose';
+export type AppTheme = 'emerald' | 'amber' | 'indigo' | 'rose' | 'sky' | 'violet';
 export type Reciter = 'hossary' | 'albanna';
 
 export interface UserProgress {

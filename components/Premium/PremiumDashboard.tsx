@@ -4,10 +4,10 @@ import { UserProgress, Surah } from '../../types';
 import { PremiumHeader } from './PremiumHeader';
 import { PremiumGreeting } from './PremiumGreeting';
 import { PremiumMascot } from './PremiumMascot';
-import { DailyGlow } from './DailyGlow';
+
 import { PremiumJourney } from './PremiumJourney';
 import { PremiumPrayerTimes } from './PremiumPrayerTimes';
-import { AyatOfTheDay } from './AyatOfTheDay';
+
 import { PremiumNav } from './PremiumNav';
 import { SHORT_SURAHS } from '../../constants';
 
@@ -88,20 +88,6 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
             </div>
         ) : (
           <>
-            {/* 1. Salutation */}
-            <PremiumGreeting 
-              userName={progress.userName || 'Champion'} 
-              onRename={() => onAction('renameUser')}
-            />
-            
-            {/* 2. Guidance & Mascotte (Lumi) */}
-            <PremiumMascot 
-              onPlayAudio={() => onAction('playLumiAudio')} 
-              loading={false}
-            />
-
-            {/* 3. Gamification (Daily Glow) */}
-            <DailyGlow streak={progress.streak || 0} />
 
             {/* 4. Parcours Coranique */}
             <section className="space-y-4">
@@ -124,8 +110,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
               <PremiumPrayerTimes />
             </section>
 
-            {/* 6. Verset du Jour */}
-            <AyatOfTheDay onListen={() => onAction('playAyatAudio')} />
+
           </>
         )}
       </main>

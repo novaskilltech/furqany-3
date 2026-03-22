@@ -13,8 +13,10 @@ interface ThemePickerProps {
 const themes: { id: AppTheme; color: string; bg: string }[] = [
   { id: 'rose', color: 'bg-rose-500', bg: 'bg-rose-50' },
   { id: 'emerald', color: 'bg-emerald-500', bg: 'bg-emerald-50' },
-  { id: 'gold', color: 'bg-amber-500', bg: 'bg-amber-50' },
+  { id: 'amber', color: 'bg-amber-500', bg: 'bg-amber-50' },
+  { id: 'sky', color: 'bg-sky-500', bg: 'bg-sky-50' },
   { id: 'indigo', color: 'bg-indigo-600', bg: 'bg-indigo-50' },
+  { id: 'violet', color: 'bg-violet-600', bg: 'bg-violet-50' },
 ];
 
 export const ThemePicker: React.FC<ThemePickerProps> = ({ currentTheme, isPremium, onSelect, onClose }) => {
