@@ -516,6 +516,19 @@ const App: React.FC = () => {
                 utterance.lang = i18nInstance.language === 'ar' ? 'ar-SA' : (i18nInstance.language === 'en' ? 'en-US' : 'fr-FR');
                 window.speechSynthesis.speak(utterance);
             }
+            if (action === 'renameUser') {
+                const newName = prompt(t('enter_name', "Comment t'appelles-tu ?"), progress.userName);
+                if (newName && newName.trim()) {
+                    const updatedProgress = { ...progress, userName: newName.trim() };
+                    setProgress(updatedProgress);
+                    // Save to Firebase
+                    if (user) {
+                        const { doc, setDoc } = await import('firebase/firestore');
+                        const { db } = await import('./firebase');
+                        await setDoc(doc(db, 'users', user.uid), updatedProgress, { merge: true });
+                    }
+                }
+            }
             if (action === 'playAyatAudio') {
                 // Audio for "فَاذْكُرُونِي أَذْكُرْكُمْ" (2:152)
                 const audio = new Audio("https://cdn.islamic.network/quran/audio/128/ar.alafasy/159.mp3");

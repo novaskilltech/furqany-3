@@ -89,7 +89,10 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
         ) : (
           <>
             {/* 1. Salutation */}
-            <PremiumGreeting userName={progress.userName || 'Champion'} />
+            <PremiumGreeting 
+              userName={progress.userName || 'Champion'} 
+              onRename={() => onAction('renameUser')}
+            />
             
             {/* 2. Guidance & Mascotte (Lumi) */}
             <PremiumMascot 
