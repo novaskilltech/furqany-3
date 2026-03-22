@@ -324,16 +324,7 @@ const App: React.FC = () => {
       progress.theme === 'indigo' ? 'bg-[#EEF2FF]' :
       'bg-[#F5F3FF]'
     } font-sans pb-24`}>
-      <header className="p-4 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg ${buttonClasses[progress.theme]}`}>F</div>
-          <h1 className="text-xl font-black text-gray-800 tracking-tight">Furqany</h1>
-        </div>
-        <div className="flex items-center gap-3">
-          <LanguageSwitcher />
-          <button onClick={() => setShowMenu(!showMenu)} className="p-2 text-2xl">⚙️</button>
-        </div>
-      </header>
+
 
       {showMenu && (
         <div className="p-4 space-y-3 animate-in fade-in slide-in-from-top-2">
@@ -367,74 +358,28 @@ const App: React.FC = () => {
         {mode === AppMode.SELECTION ? (
           <div className="space-y-6">
             <PremiumDashboard 
-              userName={progress.userName || t('child')} 
-              onRename={renameUser}
+              user={user}
+              progress={progress}
+              isPremium={isPremium}
+              expandedQuarterId={expandedQuarterId}
+              onAction={(action, data) => {
+                if (action === 'openMenu') setShowMenu(true);
+                if (action === 'renameUser') {
+                    const newName = prompt(t('enter_name'), progress.userName);
+                    if (newName) renameUser(newName);
+                }
+                if (action === 'selectQuarter') handleQuarterClick(data);
+                if (action === 'selectSurah') selectSurah(data);
+                if (action === 'changeTab') {
+                    if (data === 'adhkars') setMode(AppMode.ADHKARS);
+                    if (data === 'badges') setMode(AppMode.BADGES);
+                    if (data === 'games') setMode(AppMode.GAMES);
+                    if (data === 'home') setMode(AppMode.SELECTION);
+                }
+              }}
             />
             
-            <div className="space-y-6">
-              <PrayerTimes />
-              {[
-                { id: 1, name: t('quarters.q1'), range: [1, 6] },
-                { id: 2, name: t('quarters.q2'), range: [7, 17] },
-                { id: 3, name: t('quarters.q3'), range: [18, 35] },
-                { id: 4, name: t('quarters.q4'), range: [36, 114], inverted: true },
-              ].map(quarter => {
-                let surahsInQuarter = SHORT_SURAHS.filter(s => s.id >= quarter.range[0] && s.id <= quarter.range[1]);
-                if (filterMode === 'completed') {
-                  surahsInQuarter = surahsInQuarter.filter(s => progress.completedSurahs.includes(s.id));
-                }
-                if (quarter.inverted) {
-                  surahsInQuarter = [...surahsInQuarter].sort((a, b) => b.id - a.id);
-                }
-                const isExpanded = expandedQuarterId === quarter.id;
-                return (
-                  <div key={quarter.id} className="space-y-4">
-                    <button 
-                      onClick={() => handleQuarterClick(quarter.id)}
-                      className={`w-full flex items-center justify-between p-4 rounded-[2.2rem] transition-all shadow-md border-2 ${
-                        isExpanded 
-                          ? (progress.theme === 'rose' ? 'bg-rose-50/90 border-rose-200/50 scale-[1.02]' : 'bg-emerald-50/90 border-emerald-200/50 scale-[1.02]') 
-                          : 'bg-white/70 backdrop-blur-md border-white/60 hover:bg-white/80'
-                      }`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-inner border-2 border-white/80 bg-white/40">
-                          <img 
-                            src={`/${quarter.id}.png`} 
-                            alt={quarter.name} 
-                            className="w-full h-full object-cover"
-                            onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/150?text=' + quarter.id; }}
-                          />
-                        </div>
-                        <div className="text-left">
-                          <h3 className={`text-md font-black leading-tight ${surahNameTextClasses[progress.theme]}`}>{quarter.name}</h3>
-                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">{t('surahs_count', { count: surahsInQuarter.length })}</p>
-                        </div>
-                      </div>
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-transform ${isExpanded ? 'rotate-180 bg-rose-100 text-rose-600' : 'bg-gray-100/50 text-gray-400'}`}>⌄</div>
-                    </button>
-                    {isExpanded && (
-                      <div className="space-y-3 px-2 animate-in slide-in-from-top-4">
-                        {surahsInQuarter.map(surah => (
-                          <button key={surah.id} onClick={() => selectSurah(surah)} className="w-full bg-white/30 backdrop-blur-md p-4 rounded-[1.8rem] shadow-sm border border-white/40 active:border-rose-500 transition-all flex justify-between items-center group">
-                            <div className="flex items-center gap-4">
-                              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg ${progress.completedSurahs.includes(surah.id) ? 'bg-emerald-500/20 text-emerald-700' : 'bg-white/40 text-gray-400'}`}>
-                                {surah.isSpecialVerse ? '💎' : surah.idString.replace(/^0+/, '')}
-                              </div>
-                              <div className="text-left">
-                                <h4 className={`text-base font-black truncate ${surahNameTextClasses[progress.theme]}`}>{getSurahTitle(surah, i18nInstance.language)}</h4>
-                                <p className="text-[10px] text-gray-400 font-bold uppercase">{getSurahSubtitle(surah, i18nInstance.language)}</p>
-                              </div>
-                            </div>
-                            <span className="text-sm">{progress.completedSurahs.includes(surah.id) ? '✅' : '📖'}</span>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+
           </div>
         ) : mode === AppMode.LEARNING && selectedSurah ? (
           <div className="max-w-md mx-auto space-y-5 pb-10">
