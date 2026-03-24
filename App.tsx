@@ -126,8 +126,9 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const handleLanguageChange = (lng: string) => {
-      if (progress.preferredLanguage !== lng) {
-        setProgress(prev => ({ ...prev, preferredLanguage: lng }));
+      const validLng: 'fr' | 'ar' | 'en' = lng.startsWith('fr') ? 'fr' : lng.startsWith('ar') ? 'ar' : 'en';
+      if (progress.preferredLanguage !== validLng) {
+        setProgress(prev => ({ ...prev, preferredLanguage: validLng }));
       }
     };
     i18nInstance.on('languageChanged', handleLanguageChange);
@@ -232,7 +233,8 @@ const App: React.FC = () => {
 
   const handleVerseValidation = () => {
     if (!selectedSurah) return;
-    const verseId = selectedSurah.verses[currentVerseIndex].id;
+    const verse = selectedSurah.verses[currentVerseIndex];
+    const verseId = `${selectedSurah.idString}-${verse.number.toString().padStart(3, '0')}`;
     if (!progress.completedVerses.includes(verseId)) {
       setProgress(p => ({
         ...p,
@@ -267,7 +269,7 @@ const App: React.FC = () => {
           badgeEarned = BADGES_LIST.find(b => b.id === 'five_surahs');
         }
 
-        const compliment = await generateCompliment(selectedSurah.name, progress.userName || 'Enfant');
+        const compliment = await generateCompliment(selectedSurah.name, isPremium, progress.userName, progress.gender, progress.preferredLanguage);
         setCelebrationData({ compliment, badge: badgeEarned });
         
         setProgress(p => ({
@@ -319,7 +321,7 @@ const App: React.FC = () => {
     }
   };
 
-  if (!isAuthReady) return <Loader />;
+  if (!isAuthReady) return <Loader onComplete={() => {}} />;
 
   return (
     <div className={`min-h-screen transition-colors duration-700 ${
